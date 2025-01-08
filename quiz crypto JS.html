@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Quiz</title>
+    <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&family=Pixelify+Sans:wght@400..700&display=swap');
+
+
+        body {
+            background: url('https://img.freepik.com/photos-gratuite/statistiques-bancaires-recession-mauvaise-rue_1150-1720.jpg?t=st=1736289335~exp=1736292935~hmac=df09d0ce6f51aae5dd7da7d19fdf8510f9fdf11201aad5897a7cfbc4eaa22531&w=740') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Jersey 10';
+             background-position: center center;
+            color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+   
+.jersey-10-regular {
+  font-family: "Jersey 10", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+        .quiz-container {
+             background: #3b3b3b;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .quiz-heading {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.4em;
+            margin: 20px 0;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .option {
+            flex: 1;
+            margin: 0 5px;
+            padding: 15px;
+            background: #5c5c5c;
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+font-family: 'Jersey 10'
+        }
+
+        .option:hover {
+            background: #616161;
+        }
+
+        .summary {
+            font-size: 1em;
+            text-align: left;
+            background: #2E86C1;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 50px; 
+            margin-bottom: 50px;
+        }
+
+        .subject-grade {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .high-score {
+            background: #3d943d;
+        }
+
+        .medium-score {
+            background: #757575;
+        }
+
+        .low-score {
+            background: #963434;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div id="quiz">
+            <div class="quiz-heading"><h2>Welcome to the Crypto Quiz</h2><p>Prioritize Your Interests And Devote More Score to Them ...</p> </div>
+            <div id="intro">
+                <div class="question">What is your name?</div>
+                <input type="text" id="name" placeholder="Enter your name" style="width: 90%; padding: 10px; border-radius: 10px; border: none;">
+                <div class="question">How did you hear about us?</div>
+                <input type="text" id="referral" placeholder="E.g., Social Media, Friend" style="width: 90%; padding: 10px; border-radius: 10px; border: none;">
+                <div class="question">What year did you start investing in cryptocurrencies?</div>
+                <input type="number" id="startYear" placeholder="Enter year" style="width: 90%; padding: 10px; border-radius: 10px; border: none;">
+                <button onclick="startQuiz()" style="margin-top: 20px; padding: 10px 20px; background: #616161; color: white; border: none; border-radius: 10px; font-family: 'Jersey 10'; font-size: 1em; cursor: pointer;">Start Quiz</button>
+            </div>
+            <div id="quiz-content" style="display: none;">
+                <div class="quiz-heading" id="topic-heading"></div>
+                <div class="question" id="question">Loading...</div>
+                <div class="options" id="options"></div>
+            </div>
+        </div>
+        <div id="summary" class="summary" style="display: none;background: #616161;"></div>
+    </div>
+
+    <script>
+        const topics = [
+            "Trading and Investing",
+            "DeFi and DApps",
+            "Airdrops",
+            "Following Exchange Announcements",
+            "Detecting On-chain Data and Whale Activity",
+            "Detecting Meme Coins and Trend Coins",
+            "Blockchain Development and Smart Contract Coding",
+            "Technical Analysis",
+            "Fundamental Analysis and Crypto News",
+            "Following X and Discord Channels"
+        ];
+
+        const questions = {
+            "Trading and Investing": [
+                "Do you use risk management strategies for trading?",
+                "Do you diversify your portfolio effectively?",
+                "Can you explain the concept of dollar-cost averaging?",
+                "Do you understand the difference between trading and investing?",
+                "Have you ever set stop-loss orders to manage risk?"
+            ],
+            "DeFi and DApps": [
+                "Have you participated in yield farming or liquidity pools?",
+                "Do you know how to use decentralized wallets?",
+                "Can you identify the risks associated with DeFi platforms?",
+                "Have you interacted with smart contracts through DApps?",
+                "Do you track DeFi metrics like TVL (Total Value Locked)?"
+            ],
+            "Airdrops": [
+                "Have you ever successfully claimed a crypto airdrop?",
+                "Do you use tools or platforms to find airdrop opportunities?",
+                "Can you distinguish scam airdrop links from legitimate ones?",
+                "Do you understand the tax implications of airdrops?",
+                "Do you actively follow social media channels for airdrop announcements?"
+            ],
+            "Following Exchange Announcements": [
+                "Do you monitor new coin listings on exchanges?",
+                "Have you acted on a delisting announcement to sell assets?",
+                "Do you follow how listing announcements impact coin prices?",
+                "Do you use API tools to track exchange announcements?",
+                "Have you traded coins during the initial hours of their listing?"
+            ],
+            "Detecting On-chain Data and Whale Activity": [
+                "Have you used blockchain explorers like Etherscan?",
+                "Can you analyze whale wallet transactions?",
+                "Do you understand metrics like gas fees and transaction volume?",
+                "Have you tracked wallet addresses of major investors?",
+                "Can you identify patterns in on-chain activity?"
+            ],
+            "Detecting Meme Coins and Trend Coins": [
+                "Do you research the development team behind meme coins?",
+                "Can you identify liquidity risks in trend coins?",
+                "Have you assessed the hype cycle of a new coin?",
+                "Do you track social media mentions of trending coins?",
+                "Can you predict a coin's dump potential based on its tokenomics?"
+            ],
+            "Blockchain Development and Smart Contract Coding": [
+                "Do you know programming languages like Solidity or Rust?",
+                "Have you deployed a smart contract on a testnet or mainnet?",
+                "Can you audit a smart contract for vulnerabilities?",
+                "Do you understand the concept of gas optimization in coding?",
+                "Have you contributed to open-source blockchain projects?"
+            ],
+            "Technical Analysis": [
+                "Do you analyze candlestick patterns on charts?",
+                "Can you identify trends using moving averages?",
+                "Have you used indicators like Bollinger Bands or MACD?",
+                "Do you apply Fibonacci retracement levels to analyze price movement?",
+                "Can you differentiate between bullish and bearish divergence?"
+            ],
+            "Fundamental Analysis and Crypto News": [
+                "Do you evaluate a project's utility and market demand?",
+                "Have you read and analyzed crypto whitepapers?",
+                "Do you follow reputable crypto news websites?",
+                "Can you assess the credibility of a project's team and partners?",
+                "Do you track regulations and their impact on the crypto market?"
+            ],
+            "Following X and Discord Channels": [
+                "Do you follow thought leaders in the crypto space on X?",
+                "Have you joined Discord servers for crypto community discussions?",
+                "Do you know how to use bots in Discord for alerts?",
+                "Can you identify credible information from influencers?",
+                "Do you actively participate in AMA sessions on X or Discord?"
+            ]
+        };
+
+        let userName = "";
+        let referralSource = "";
+        let startYear = "";
+
+        let currentTopicIndex = 0;
+        let currentQuestionIndex = 0;
+        let scores = {};
+
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const summaryEl = document.getElementById('summary');
+        const topicHeadingEl = document.getElementById('topic-heading');
+
+        function startQuiz() {
+            userName = document.getElementById('name').value;
+            referralSource = document.getElementById('referral').value;
+            startYear = document.getElementById('startYear').value;
+
+            if (!userName || !referralSource || !startYear) {
+                alert("Please fill out all fields to start the quiz.");
+                return;
+            }
+
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('quiz-content').style.display = 'block';
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const topic = topics[currentTopicIndex];
+            const questionList = questions[topic];
+
+            if (currentQuestionIndex >= questionList.length) {
+                currentTopicIndex++;
+                currentQuestionIndex = 0;
+
+                if (currentTopicIndex >= topics.length) {
+                    showSummary();
+                    return;
+                }
+            }
+
+            const newTopic = topics[currentTopicIndex];
+            const question = questions[newTopic][currentQuestionIndex];
+
+            if (currentQuestionIndex === 0) {
+                topicHeadingEl.textContent = newTopic;
+            }
+
+            questionEl.textContent = question;
+            optionsEl.innerHTML = '';
+
+            for (let i = 1; i <= 5; i++) {
+                const button = document.createElement('div');
+                button.textContent = i;
+                button.className = 'option';
+                button.onclick = () => handleResponse(i);
+                optionsEl.appendChild(button);
+            }
+        }
+
+        function handleResponse(score) {
+            const topic = topics[currentTopicIndex];
+            scores[topic] = scores[topic] || [];
+            scores[topic].push(score);
+
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function showSummary() {
+            document.getElementById('quiz').style.display = 'none';
+            summaryEl.style.display = 'block';
+
+            let sortedScores = Object.keys(scores).map(topic => {
+                const total = scores[topic].reduce((a, b) => a + b, 0);
+                return { topic, total };
+            }).sort((a, b) => b.total - a.total);
+
+            summaryEl.innerHTML = `<h2>Quiz Summary</h2>`;
+            summaryEl.innerHTML += `<p>Name: ${userName}</p>`;
+            summaryEl.innerHTML += `<p>Referral Source: ${referralSource}</p>`;
+            summaryEl.innerHTML += `<p>Started Investing in: ${startYear}</p>`;
+            summaryEl.innerHTML += `<h3>Results by Topic:</h3>`;
+
+            sortedScores.forEach(({ topic, total }) => {
+                let scoreClass = total > 20 ? 'high-score' : total > 10 ? 'medium-score' : 'low-score';
+                summaryEl.innerHTML += `<div class="subject-grade ${scoreClass}">${topic}: ${total} points</div>`;
+            });
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
